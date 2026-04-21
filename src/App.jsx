@@ -761,6 +761,26 @@ function SectionEditor({ section, value, onChange }) {
     const line = v.substring(lineStart, lineEnd);
     const lineBeforeCursor = v.substring(lineStart, start);
 
+    // Ctrl+B / Cmd+B: toggle bold markdown wrapping
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b") {
+      e.preventDefault();
+      const selected = v.substring(start, end);
+      if (selected) {
+        const isWrapped =
+          selected.length >= 4 && selected.startsWith("**") && selected.endsWith("**");
+        const replaced = isWrapped ? selected.slice(2, -2) : `**${selected}**`;
+        const newV = v.substring(0, start) + replaced + v.substring(end);
+        onChange(newV);
+        setSelection(start, start + replaced.length);
+      } else {
+        const insertion = "****";
+        const newV = v.substring(0, start) + insertion + v.substring(start);
+        onChange(newV);
+        setCursor(start + 2);
+      }
+      return;
+    }
+
     if (e.key === "Tab") {
       e.preventDefault();
       const parsed = parseLine(line);
@@ -1058,6 +1078,16 @@ function FullViewModal({ weekStart, weekDates, data, recurring, onClose }) {
   );
 }
 
+function renderWithBold(text) {
+  const parts = text.split(/(\*\*[^*\n]+?\*\*)/g);
+  return parts.map((p, i) => {
+    if (p.startsWith("**") && p.endsWith("**") && p.length >= 4) {
+      return <strong key={i}>{p.slice(2, -2)}</strong>;
+    }
+    return <span key={i}>{p}</span>;
+  });
+}
+
 function TreeView({ nodes, depth = 0 }) {
   const bullets = ["●", "○", "■"];
   const bullet = bullets[Math.min(depth, bullets.length - 1)];
@@ -1078,7 +1108,7 @@ function TreeView({ nodes, depth = 0 }) {
               {bullet}
             </span>
             <div className={`${textClass} flex-1 leading-relaxed break-words`}>
-              {node.text}
+              {renderWithBold(node.text)}
               {node.dates && node.dates.length > 0 && (
                 <span className="ml-2 text-xs font-semibold text-slate-500">
                   — {formatDateRange(node.dates)}
