@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { Plus, Trash2, Copy, ChevronLeft, ChevronRight, Calendar, Check, Repeat, X, LogOut } from "lucide-react";
+import { Plus, Trash2, Copy, ChevronLeft, ChevronRight, Calendar, Check, Repeat, X, LogOut, RotateCcw } from "lucide-react";
 import { supabase } from "./lib/supabase";
 import { createStorage, migrateFromLocalStorage } from "./lib/storage";
 
@@ -570,17 +570,16 @@ function ReportHelper({ session }) {
           <button
             onClick={() => setShowFullView(true)}
             className="flex items-center justify-center gap-1.5 px-3 py-2.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-lg text-sm font-medium shadow-sm transition-colors"
-            title="큰 화면으로 보기"
+            title="이번주 전체보기"
           >
-            크게 보기
+            이번주 전체보기
           </button>
           <button
             onClick={() => setShowResetConfirm(true)}
-            className="flex items-center justify-center gap-1.5 px-3 py-2.5 bg-white hover:bg-red-50 border border-slate-200 hover:border-red-200 text-slate-600 hover:text-red-600 rounded-lg text-sm font-medium shadow-sm transition-colors"
+            className="flex items-center justify-center px-3 py-2.5 bg-white hover:bg-red-50 border border-slate-200 hover:border-red-200 text-slate-600 hover:text-red-600 rounded-lg text-sm font-medium shadow-sm transition-colors"
             title="이번 주 초기화"
           >
-            <Trash2 className="w-4 h-4" />
-            <span className="hidden sm:inline">초기화</span>
+            <RotateCcw className="w-4 h-4" />
           </button>
         </div>
 
